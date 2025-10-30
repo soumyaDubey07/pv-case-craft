@@ -1,0 +1,2319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>PV Narrative Practice</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg-1: #e9efff;
+  --bg-2: #f9fbff;
+  --card-bg: rgba(255, 255, 255, 0.82);
+  --card-elevated: rgba(255, 255, 255, 0.95);
+  --border: rgba(47, 66, 114, 0.16);
+  --divider: rgba(47, 66, 114, 0.12);
+  --text: #0f1b3d;
+  --muted: #5c6b8a;
+  --muted-strong: #24345b;
+  --accent: #2d6cdf;
+  --accent-strong: #1f4fa8;
+  --accent-soft: rgba(45, 108, 223, 0.14);
+  --success: #1d9c72;
+  --warning: #d98c00;
+  --danger: #c64545;
+  --pill-bg: rgba(45, 108, 223, 0.14);
+  --pill-text: #1f4fa8;
+  --chip-bg: rgba(45, 108, 223, 0.1);
+  --focus: rgba(45, 108, 223, 0.35);
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(circle at 0% -20%, rgba(45, 108, 223, 0.12) 0%, transparent 45%), linear-gradient(160deg, var(--bg-1) 0%, var(--bg-2) 55%, #ffffff 100%);
+  color: var(--text);
+  line-height: 1.6;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 90% 10%, rgba(29, 156, 114, 0.06) 0%, transparent 55%);
+  z-index: -1;
+}
+header {
+  padding: 32px 40px 24px;
+}
+.hero {
+  display: flex;
+  align-items: stretch;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.hero-copy {
+  flex: 1 1 320px;
+  min-width: 280px;
+}
+header h1 {
+  margin: 0 0 12px;
+  font-size: 32px;
+  letter-spacing: 0.2px;
+  color: var(--muted-strong);
+}
+header p {
+  margin: 0 0 18px;
+  max-width: 680px;
+  color: var(--muted);
+}
+.hero-pills {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--pill-bg);
+  color: var(--pill-text);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.hero-card {
+  flex: 0 1 280px;
+  padding: 20px 22px;
+  background: var(--card-elevated);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  box-shadow: 0 16px 36px rgba(15, 27, 61, 0.12);
+  backdrop-filter: blur(20px);
+}
+.hero-card ol {
+  margin: 12px 0 0 16px;
+  padding: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+.hero-card li {
+  margin-bottom: 6px;
+}
+.hero-label {
+  font-size: 12px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--accent-strong);
+  font-weight: 700;
+}
+main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px 56px;
+}
+.status-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+.status-item {
+  display: grid;
+  gap: 4px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  min-width: 180px;
+}
+.status-item .label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+}
+.status-item .value {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--muted-strong);
+}
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  background: rgba(45, 108, 223, 0.1);
+  color: var(--accent-strong);
+  border: 1px solid transparent;
+  transition: background 0.2s ease, color 0.2s ease, border 0.2s ease;
+}
+.status-pill[data-state="start"] {
+  background: rgba(45, 108, 223, 0.08);
+  border-color: rgba(45, 108, 223, 0.2);
+}
+.status-pill[data-state="progress"] {
+  background: rgba(217, 140, 0, 0.12);
+  color: var(--warning);
+  border-color: rgba(217, 140, 0, 0.28);
+}
+.status-pill[data-state="complete"] {
+  background: rgba(29, 156, 114, 0.18);
+  color: var(--success);
+  border-color: rgba(29, 156, 114, 0.32);
+}
+.status-pill[data-state="low"],
+.status-pill[data-state="high"] {
+  border-color: rgba(217, 140, 0, 0.28);
+  background: rgba(217, 140, 0, 0.12);
+  color: var(--warning);
+}
+.status-pill[data-state="ok"] {
+  background: rgba(29, 156, 114, 0.18);
+  color: var(--success);
+  border-color: rgba(29, 156, 114, 0.32);
+}
+.status-pill[data-state="idle"] {
+  background: rgba(47, 66, 114, 0.08);
+  color: var(--muted);
+  border-color: rgba(47, 66, 114, 0.14);
+}
+.status-pill--muted {
+  background: rgba(47, 66, 114, 0.06);
+  color: var(--muted);
+  border-color: rgba(47, 66, 114, 0.12);
+}
+.layout {
+  display: grid;
+  grid-template-columns: minmax(300px, 340px) 1fr;
+  gap: 24px;
+  align-items: start;
+}
+.sidebar-column,
+.main-column {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: 0 20px 40px rgba(15, 27, 61, 0.08);
+  backdrop-filter: blur(18px);
+  transition: box-shadow 0.25s ease;
+}
+.card h2 {
+  margin: 0 0 14px;
+  font-size: 18px;
+  color: var(--accent);
+  letter-spacing: 0.3px;
+}
+.card:hover {
+  box-shadow: 0 26px 60px rgba(15, 27, 61, 0.14);
+}
+#casePickerCard {
+  margin-bottom: 24px;
+}
+#vignetteCard {
+  max-height: 600px;
+  overflow-y: auto;
+}
+#casePicker {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+#casePicker select {
+  padding: 12px 36px 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fff url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8"%3E%3Cpath fill="%232d6cdf" d="M1.41.59 6 5.17 10.59.59 12 2l-6 6-6-6L1.41.59Z"/%3E%3C/svg%3E') no-repeat right 12px center / 12px 8px;
+  appearance: none;
+  font-weight: 600;
+  color: var(--muted-strong);
+}
+button {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: none;
+  padding: 10px 20px;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
+  color: #fff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  box-shadow: 0 10px 22px rgba(45, 108, 223, 0.3);
+}
+button.secondary {
+  background: transparent;
+  color: var(--accent-strong);
+  border: 1px solid var(--accent);
+  box-shadow: none;
+}
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+button:hover:not(:disabled) {
+  filter: brightness(0.96);
+  transform: translateY(-2px);
+}
+button:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+.vignette-content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.vignette-section {
+  border-top: 1px solid var(--divider);
+  padding-top: 12px;
+}
+.vignette-section:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+.vignette-section strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--muted-strong);
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+fieldset {
+  border: 1px solid var(--divider);
+  border-radius: 14px;
+  padding: 18px;
+  margin: 0 0 18px;
+  background: rgba(255, 255, 255, 0.72);
+}
+fieldset legend {
+  padding: 0 8px;
+  font-weight: 700;
+  color: var(--accent-strong);
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 1.2px;
+}
+.field-group {
+  display: grid;
+  gap: 8px;
+}
+.field-group label {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--muted);
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+.field-group input[type="text"],
+.field-group input[type="number"],
+.field-group input[type="date"],
+.field-group select,
+.field-group textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fff;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+  font-size: 14px;
+  color: var(--muted-strong);
+}
+.field-group input:focus,
+.field-group select:focus,
+.field-group textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(45, 108, 223, 0.18);
+  outline: none;
+}
+.field-inline {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.field-inline .field-group {
+  flex: 1;
+  min-width: 160px;
+}
+.checkbox-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.dynamic-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.dynamic-item {
+  border: 1px solid var(--divider);
+  border-radius: 12px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.9);
+  position: relative;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+.dynamic-item:hover {
+  border-color: var(--accent);
+  box-shadow: 0 12px 26px rgba(15, 27, 61, 0.08);
+}
+.dynamic-item button.remove {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  padding: 4px 8px;
+  font-size: 11px;
+  border-radius: 999px;
+  box-shadow: none;
+}
+.chip-input {
+  display: flex;
+  gap: 8px;
+}
+.chip-input input {
+  flex: 1;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.chip {
+  background: rgba(45, 108, 223, 0.12);
+  color: var(--accent-strong);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.chip button {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  padding: 0;
+  font-size: 12px;
+  box-shadow: none;
+  border-radius: 0;
+}
+.narrative-wrapper {
+  display: grid;
+  grid-template-columns: minmax(240px, 280px) 1fr;
+  gap: 24px;
+  align-items: start;
+}
+.narrative-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.narrative-editor textarea {
+  width: 100%;
+  min-height: 320px;
+  max-height: 500px;
+  resize: vertical;
+}
+.word-feedback {
+  margin-top: 10px;
+  display: grid;
+  gap: 8px;
+}
+.word-count {
+  font-size: 13px;
+  color: var(--muted);
+}
+.word-count.warning {
+  color: var(--warning);
+}
+.word-count.error {
+  color: var(--danger);
+}
+.word-meter {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(47, 66, 114, 0.12);
+  overflow: hidden;
+}
+.word-meter::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  left: 66.7%;
+  width: 33.3%;
+  background: rgba(29, 156, 114, 0.18);
+  pointer-events: none;
+}
+.word-meter-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0%;
+  background: var(--accent);
+  border-radius: inherit;
+  transition: width 0.3s ease, background 0.3s ease;
+}
+.word-meter-fill[data-state="low"] {
+  background: var(--warning);
+}
+.word-meter-fill[data-state="high"] {
+  background: var(--warning);
+}
+.word-meter-fill[data-state="ok"] {
+  background: var(--success);
+}
+.word-meter-fill[data-state="idle"] {
+  background: rgba(47, 66, 114, 0.2);
+}
+.prompts {
+  background: var(--accent-soft);
+  border-radius: 14px;
+  padding: 16px 18px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--muted);
+  max-height: 500px;
+  overflow-y: auto;
+  box-shadow: inset 0 0 0 1px rgba(45, 108, 223, 0.18);
+}
+.prompts h3 {
+  margin: 0 0 12px;
+  font-size: 15px;
+  color: var(--accent-strong);
+}
+.prompts ul {
+  margin: 0;
+  padding-left: 18px;
+}
+.prompts li {
+  margin-bottom: 6px;
+}
+#submitBtn {
+  margin: 32px auto 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  font-size: 16px;
+  box-shadow: 0 20px 40px rgba(45, 108, 223, 0.25);
+}
+#submitBtn::after {
+  content: ">";
+  font-size: 18px;
+}
+#reportSection {
+  margin-top: 32px;
+}
+.score-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  height: 120px;
+  border-radius: 18px;
+  font-size: 28px;
+  font-weight: 700;
+  margin-right: 24px;
+}
+.score-green {
+  background: rgba(29, 156, 114, 0.2);
+  color: var(--success);
+}
+.score-amber {
+  background: rgba(217, 140, 0, 0.18);
+  color: var(--warning);
+}
+.score-red {
+  background: rgba(198, 69, 69, 0.2);
+  color: var(--danger);
+}
+.report-summary {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.checklist {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+  font-size: 13px;
+}
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--divider);
+  background: rgba(255, 255, 255, 0.85);
+}
+.check-item.ok {
+  border-color: rgba(29, 156, 114, 0.28);
+}
+.check-item.warn {
+  border-color: rgba(217, 140, 0, 0.35);
+}
+.check-item span.icon {
+  font-size: 18px;
+}
+.timeline {
+  margin-top: 28px;
+  padding: 18px;
+  border: 1px solid var(--divider);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.86);
+}
+.timeline h3 {
+  margin: 0 0 16px;
+  font-size: 16px;
+  color: var(--accent-strong);
+}
+.timeline-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  position: relative;
+}
+.timeline-list::before {
+  content: "";
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  top: 34px;
+  height: 2px;
+  background: rgba(47, 66, 114, 0.12);
+}
+.timeline-point {
+  position: relative;
+  flex: 1;
+  min-width: 180px;
+  padding: 14px;
+  border-radius: 12px;
+  background: var(--chip-bg);
+  border: 1px solid transparent;
+}
+.timeline-point::before {
+  content: "";
+  position: absolute;
+  top: 28px;
+  left: 12px;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--accent);
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 2px rgba(45, 108, 223, 0.25);
+}
+.timeline-point.invalid {
+  border: 1px solid var(--danger);
+  background: rgba(198, 69, 69, 0.1);
+}
+.timeline-point.invalid::before {
+  background: var(--danger);
+  box-shadow: 0 0 0 2px rgba(198, 69, 69, 0.35);
+}
+.issue-section {
+  margin-top: 26px;
+}
+.issue-section h3 {
+  margin: 0 0 12px;
+  font-size: 16px;
+  color: var(--muted-strong);
+}
+.issue-list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.issue-list li {
+  margin-bottom: 6px;
+}
+.report-actions {
+  margin-top: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.toggle-row {
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.model-narrative {
+  margin-top: 18px;
+  padding: 18px;
+  border-radius: 14px;
+  border: 1px solid var(--divider);
+  background: rgba(255, 255, 255, 0.88);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.diff-output {
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px dashed var(--accent);
+  font-size: 12px;
+  color: var(--muted);
+  background: rgba(45, 108, 223, 0.08);
+}
+.diff-missing {
+  background: rgba(217, 140, 0, 0.4);
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+.flagged-text {
+  background: rgba(198, 69, 69, 0.16);
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+.hidden {
+  display: none !important;
+}
+@media (max-width: 1200px) {
+  main {
+    padding: 0 28px 48px;
+  }
+  .narrative-wrapper {
+    grid-template-columns: minmax(220px, 260px) 1fr;
+    gap: 20px;
+  }
+}
+@media (max-width: 1080px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .sidebar-column,
+  .main-column {
+    gap: 20px;
+  }
+  #casePickerCard {
+    margin-bottom: 0;
+  }
+  #vignetteCard {
+    max-height: 400px;
+  }
+  .narrative-wrapper {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .prompts {
+    order: 2;
+    max-height: 300px;
+  }
+  .narrative-editor {
+    order: 1;
+  }
+  .narrative-editor textarea {
+    min-height: 280px;
+  }
+  #submitBtn {
+    width: 100%;
+    justify-content: center;
+  }
+  .status-item {
+    min-width: auto;
+  }
+}
+@media (max-width: 640px) {
+  header {
+    padding: 28px 20px 18px;
+  }
+  main {
+    padding: 0 20px 40px;
+  }
+  .layout {
+    gap: 16px;
+  }
+  .sidebar-column,
+  .main-column {
+    gap: 16px;
+  }
+  button {
+    width: 100%;
+    justify-content: center;
+  }
+  .narrative-editor textarea {
+    min-height: 240px;
+  }
+  .status-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .status-pill {
+    justify-content: center;
+  }
+  .card {
+    padding: 18px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="hero">
+    <div class="hero-copy">
+      <h1>PV CaseCraft Narrative Studio</h1>
+      <p>Welcome to CaseCraft by Soumya. The ultimate playground for perfecting the art of safety narratives.Perfect your pharmacovigilance narratives across ten synthetic unsolicited cases with guided linting, scoring, and autosave support.</p>
+      <div class="hero-pills">
+        <span class="pill">10 practice cases</span>
+        <span class="pill">Live validation</span>
+        <span class="pill">Autosave enabled</span>
+      </div>
+    </div>
+    <div class="hero-card" aria-label="Workflow summary">
+      <span class="hero-label">Workflow</span>
+      <ol>
+        <li>Select a case and review the vignette.</li>
+        <li>Capture the facts in the CaseCraft Form.</li>
+        <li>Draft the narrative and iterate with feedback.</li>
+      </ol>
+    </div>
+  </div>
+</header>
+<main>
+  <div class="status-bar" aria-live="polite">
+    <div class="status-item">
+      <span class="label">Active Case</span>
+      <span class="value" id="activeCaseLabel">Case 1 | C01</span>
+    </div>
+    <div class="status-pill" id="completionBadge" data-state="start">0/15 data elements</div>
+    <div class="status-pill" id="wordStatus" data-state="idle">Word target pending</div>
+    <div class="status-pill status-pill--muted">Autosave on</div>
+  </div>
+  <div class="layout">
+    <div class="sidebar-column">
+      <section class="card" id="casePickerCard">
+        <h2>Case Picker</h2>
+        <div id="casePicker">
+          <label class="field-group">
+            <span>Choose case</span>
+            <select id="caseSelect" aria-label="Select training case"></select>
+          </label>
+          <button id="randomCaseBtn" type="button">Randomize &amp; Start</button>
+        </div>
+      </section>
+      <section class="card" id="vignetteCard">
+        <h2>Case Vignette</h2>
+        <div class="vignette-content" id="vignetteContent" aria-live="polite"></div>
+      </section>
+    </div><!-- .sidebar-column -->
+    
+    <div class="main-column">
+    <section class="card" id="formCard">
+      <h2>CaseCraft Form</h2>
+      <form id="caseForm" autocomplete="off">
+        <fieldset>
+          <legend>Patient</legend>
+          <div class="field-inline">
+            <div class="field-group">
+              <label for="patientAge">Age</label>
+              <input id="patientAge" type="number" min="0" data-bind="patient.age" aria-describedby="ageHelp" />
+              <div class="checkbox-line">
+                <input type="checkbox" id="patientAgeUnknown" data-bind="patient.age_unknown" />
+                <label for="patientAgeUnknown">Unknown</label>
+              </div>
+            </div>
+            <div class="field-group">
+              <label for="patientSex">Sex</label>
+              <select id="patientSex" data-bind="patient.sex">
+                <option value="">Select</option>
+                <option value="female">Female</option>
+                <option value="male">Male</option>
+              </select>
+              <div class="checkbox-line">
+                <input type="checkbox" id="patientSexUnknown" data-bind="patient.sex_unknown" />
+                <label for="patientSexUnknown">Unknown</label>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Suspect Drugs</legend>
+          <div class="dynamic-list" id="drugList"></div>
+          <button type="button" class="secondary" id="addDrugBtn">Add Suspect Drug</button>
+        </fieldset>
+        <fieldset>
+          <legend>Event</legend>
+          <div class="field-group">
+            <label for="eventPt">Preferred Term</label>
+            <input id="eventPt" type="text" data-bind="event.pt" readonly />
+          </div>
+          <div class="field-inline">
+            <div class="field-group">
+              <label for="eventOnset">Onset Date</label>
+              <input id="eventOnset" type="date" data-bind="event.onset_date" />
+            </div>
+            <div class="field-group">
+              <label for="eventSeverity">Severity</label>
+              <select id="eventSeverity" data-bind="event.severity">
+                <option value="">Select</option>
+                <option value="mild">Mild</option>
+                <option value="moderate">Moderate</option>
+                <option value="severe">Severe</option>
+              </select>
+            </div>
+          </div>
+          <div class="checkbox-line">
+            <input type="checkbox" id="eventSerious" data-bind="event.seriousness" />
+            <label for="eventSerious">Serious</label>
+          </div>
+          <div class="field-group">
+            <label for="eventSeriousCriteria">Seriousness Criteria</label>
+            <select id="eventSeriousCriteria" data-bind="event.serious_criteria" multiple size="4" aria-label="Seriousness criteria">
+              <option value="death">Death</option>
+              <option value="life-threatening">Life-threatening</option>
+              <option value="hospitalization">Hospitalization</option>
+              <option value="disability">Disability</option>
+              <option value="congenital anomaly">Congenital anomaly</option>
+              <option value="medically significant">Medically significant</option>
+            </select>
+          </div>
+          <div class="field-inline">
+            <div class="field-group">
+              <label for="eventOutcome">Outcome</label>
+              <select id="eventOutcome" data-bind="event.outcome">
+                <option value="">Select</option>
+                <option value="recovered">Recovered</option>
+                <option value="recovering">Recovering</option>
+                <option value="not recovered">Not recovered</option>
+                <option value="fatal">Fatal</option>
+                <option value="unknown">Unknown</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label for="eventOutcomeDate">Outcome Date / Anchor</label>
+              <input id="eventOutcomeDate" type="date" data-bind="event.outcome_date" />
+            </div>
+          </div>
+          <div class="field-inline">
+            <div class="field-group">
+              <label for="actionTaken">Action Taken</label>
+              <input id="actionTaken" type="text" data-bind="event.action_taken" placeholder="e.g., held" />
+            </div>
+            <div class="field-group">
+              <label for="actionDate">Action Date</label>
+              <input id="actionDate" type="date" data-bind="event.action_date" />
+            </div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Dechallenge / Rechallenge</legend>
+          <div class="field-inline">
+            <div class="field-group">
+              <label for="dechallengeStatus">Dechallenge</label>
+              <select id="dechallengeStatus" data-bind="dechallenge.status">
+                <option value="">Select</option>
+                <option value="improved">Improved</option>
+                <option value="positive">Positive</option>
+                <option value="negative">Negative</option>
+                <option value="not performed">Not performed</option>
+                <option value="not reported">Not reported</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label for="dechallengeDate">Date</label>
+              <input id="dechallengeDate" type="date" data-bind="dechallenge.date" />
+            </div>
+          </div>
+          <div class="field-inline">
+            <div class="field-group">
+              <label for="rechallengeStatus">Rechallenge</label>
+              <select id="rechallengeStatus" data-bind="rechallenge.status">
+                <option value="">Select</option>
+                <option value="positive">Positive</option>
+                <option value="negative">Negative</option>
+                <option value="not performed">Not performed</option>
+                <option value="not reported">Not reported</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label for="rechallengeDate">Date</label>
+              <input id="rechallengeDate" type="date" data-bind="rechallenge.date" />
+            </div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Labs / Investigations</legend>
+          <div class="dynamic-list" id="labList"></div>
+          <button type="button" class="secondary" id="addLabBtn">Add Lab / Investigation</button>
+        </fieldset>
+        <fieldset>
+          <legend>History &amp; Concomitants</legend>
+          <div>
+            <label class="field-group" for="historyInput"><span>History</span></label>
+            <div class="chip-input">
+              <input id="historyInput" type="text" placeholder="Add history item" />
+              <button type="button" class="secondary" id="addHistoryBtn">Add</button>
+            </div>
+            <div class="chips" id="historyChips"></div>
+          </div>
+          <div style="margin-top:16px;">
+            <label class="field-group" for="concomInput"><span>Concomitants / Risk Factors</span></label>
+            <div class="chip-input">
+              <input id="concomInput" type="text" placeholder="Add concomitant" />
+              <button type="button" class="secondary" id="addConcomBtn">Add</button>
+            </div>
+            <div class="chips" id="concomChips"></div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Reporter &amp; Regulatory</legend>
+          <div class="field-inline">
+            <div class="field-group">
+              <label for="reporterType">Reporter Type</label>
+              <select id="reporterType" data-bind="reporter.type">
+                <option value="">Select</option>
+                <option value="HCP">Healthcare professional</option>
+                <option value="Consumer">Consumer</option>
+                <option value="Lawyer">Lawyer</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label for="reporterCountry">Country</label>
+              <input id="reporterCountry" type="text" data-bind="reporter.country" />
+            </div>
+            <div class="field-group">
+              <label for="reportDate">Report Date</label>
+              <input id="reportDate" type="date" data-bind="reporter.report_date" />
+            </div>
+          </div>
+          <div class="field-inline" style="margin-top:12px;">
+            <div class="field-group">
+              <label for="expectedness">Expectedness</label>
+              <select id="expectedness" data-bind="expectedness">
+                <option value="">Select</option>
+                <option value="listed">Listed</option>
+                <option value="unlisted">Unlisted</option>
+                <option value="unlisted/contraindicated">Unlisted / Contraindicated</option>
+                <option value="unknown">Unknown</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label for="reporterCausality">Reporter Causality</label>
+              <select id="reporterCausality" data-bind="reporter_causality">
+                <option value="">Select</option>
+                <option value="related">Related</option>
+                <option value="not related">Not related</option>
+                <option value="not reported">Not reported</option>
+                <option value="unknown">Unknown</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    </section>
+    
+    <section class="card" id="narrativeCard">
+      <h2>Narrative Editor</h2>
+      <div class="narrative-wrapper">
+        <aside class="prompts" aria-label="Narrative prompts">
+          <h3>Tips to keep in mind</h3>
+          <ul>
+            <li>Start with patient &amp; indication - age, sex, drug, dose, route, start date.</li>
+            <li>Keep clear chronology - drug start -&gt; event -&gt; action -&gt; outcome.</li>
+            <li>Be factual - describe what happened and when; avoid opinions.</li>
+            <li>Add key labs - include value, unit, and date.</li>
+            <li>State actions - stopped, reduced, or continued, with date.</li>
+            <li>Mention dechallenge/rechallenge - improved, unchanged, or not reported.</li>
+            <li>Include history &amp; concomitants - note possible confounders.</li>
+            <li>End with reporter info - type, seriousness, and expectedness.</li>
+            <li>Write neutrally - third person, short sentences, no causal claims.</li>
+            <li>Target 120-180 words - concise but complete.</li>
+          </ul>
+        </aside>
+        <div class="narrative-editor">
+          <textarea id="narrativeInput" aria-label="Narrative text" placeholder="Compose a neutral narrative covering the required elements..."></textarea>
+          <div class="word-feedback">
+            <div id="wordCount" class="word-count">0 words (target 120-180)</div>
+            <div class="word-meter" id="wordMeter" role="progressbar" aria-label="Word count progress" aria-valuemin="0" aria-valuemax="180" aria-valuenow="0" aria-valuetext="0 words">
+              <div id="wordMeterFill" class="word-meter-fill" data-state="idle"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div><!-- .main-column -->
+  
+</div><!-- .layout -->
+
+<button id="submitBtn" type="button">Submit for Feedback</button>
+<section id="reportSection" class="card hidden" aria-live="polite"></section>
+</main>
+<script>
+const CASES = [
+  {
+    "case_id": "C01",
+    "unsolicited": true,
+    "patient": {"age": 54, "sex": "female"},
+    "suspect_drugs": [{
+      "name": "atorvastatin", "dose": "20 mg", "route": "oral",
+      "frequency": "once daily", "indication": "hypercholesterolemia",
+      "start_date": "2025-03-01", "stop_date": "2025-03-22"
+    }],
+    "events": [{
+      "pt": "Myalgia", "onset_date": "2025-03-20",
+      "severity": "moderate", "outcome": "recovered", "outcome_date": "2025-03-28",
+      "serious": false, "serious_criteria": []
+    }],
+    "labs": [{"name":"Creatine kinase","value":380,"unit":"U/L","date":"2025-03-22","uln":200}],
+    "history": ["Hypothyroidism"],
+    "concomitants": [{"name":"levothyroxine","dose":"75 mcg","frequency":"daily"}],
+    "dechallenge": "improved", "dechallenge_date": "2025-03-28",
+    "rechallenge": "not performed",
+    "reporter": {"type":"HCP","country":"Canada","report_date":"2025-03-29"},
+    "expectedness": "listed", "reporter_causality": "not reported"
+  },
+  {
+    "case_id": "C02",
+    "unsolicited": true,
+    "patient": {"age": 68, "sex": "male"},
+    "suspect_drugs": [{
+      "name": "warfarin", "dose": "variable", "route": "oral",
+      "frequency": "daily", "indication": "anticoagulation",
+      "start_date": "2025-01-15"
+    }],
+    "events": [{
+      "pt": "Upper gastrointestinal hemorrhage", "onset_date": "2025-02-10",
+      "severity": "severe", "outcome": "recovering",
+      "serious": true, "serious_criteria": ["hospitalization"]
+    }],
+    "labs": [{"name":"INR","value":5.2,"unit":"","date":"2025-02-10"},{"name":"Hemoglobin","value":8.9,"unit":"g/dL","date":"2025-02-10"}],
+    "history": ["Hypertension"],
+    "concomitants": [{"name":"ibuprofen","dose":"PRN","frequency":"as needed"}],
+    "action_taken":"held 2025-02-10",
+    "reporter": {"type":"HCP","country":"United States","report_date":"2025-02-14"},
+    "expectedness":"listed","reporter_causality":"not reported"
+  },
+  {
+    "case_id": "C03",
+    "unsolicited": true,
+    "patient": {"age": 34, "sex": "female"},
+    "suspect_drugs": [{
+      "name": "sertraline", "dose": "50 mg", "route": "oral",
+      "frequency": "once daily", "indication": "depression",
+      "start_date": "2025-04-01"
+    }],
+    "events": [{
+      "pt": "Rash maculopapular", "onset_date": "2025-04-05",
+      "severity": "mild", "outcome": "recovered", "outcome_date": "2025-04-09",
+      "serious": false, "serious_criteria": []
+    }],
+    "reporter": {"type":"Consumer","country":"United Kingdom","report_date":"2025-04-10"},
+    "expectedness":"unlisted","reporter_causality":"not reported"
+  },
+  {
+    "case_id": "C04",
+    "unsolicited": true,
+    "patient": {"age": 29, "sex": "male"},
+    "suspect_drugs": [{
+      "name": "amoxicillin", "dose": "500 mg", "route": "oral",
+      "frequency": "three times daily", "indication": "sinusitis",
+      "start_date": "2025-06-02", "stop_date":"2025-06-03"
+    }],
+    "events": [{
+      "pt": "Anaphylactic reaction", "onset_date": "2025-06-03",
+      "severity": "severe", "outcome": "recovered", "outcome_date": "2025-06-04",
+      "serious": true, "serious_criteria": ["life-threatening"]
+    }],
+    "history": ["Seasonal allergic rhinitis"],
+    "treatment":"epinephrine IV",
+    "reporter": {"type":"HCP","country":"India","report_date":"2025-06-05"},
+    "expectedness":"unlisted","reporter_causality":"not reported"
+  },
+  {
+    "case_id": "C05",
+    "unsolicited": true,
+    "patient": {"age": 46, "sex": "male"},
+    "suspect_drugs": [{
+      "name": "liraglutide", "dose": "1.2 mg", "route": "subcutaneous",
+      "frequency": "once daily", "indication":"type 2 diabetes",
+      "start_date":"2025-05-01","stop_date":"2025-05-20"
+    }],
+    "events": [{
+      "pt":"Acute pancreatitis","onset_date":"2025-05-19",
+      "severity":"severe","outcome":"recovering",
+      "serious": true,"serious_criteria":["hospitalization"]
+    }],
+    "labs":[{"name":"Lipase","value":860,"unit":"U/L","date":"2025-05-19","uln":60}],
+    "concomitants":[{"name":"alcohol","dose":"social","frequency":"weekends"}],
+    "reporter":{"type":"HCP","country":"Germany","report_date":"2025-05-26"},
+    "expectedness":"listed","reporter_causality":"not reported"
+  },
+  {
+    "case_id": "C06",
+    "unsolicited": true,
+    "patient": {"age": 72, "sex": "female"},
+    "suspect_drugs": [{
+      "name": "pacemaker device","dose":"","route":"device","frequency":"","indication":"bradycardia",
+      "start_date":"2025-02-01"
+    }],
+    "events": [{
+      "pt":"Device pocket infection","onset_date":"2025-02-10",
+      "severity":"moderate","outcome":"recovering",
+      "serious": true,"serious_criteria":["medically significant"]
+    }],
+    "procedures":["Pocket revision 2025-02-12"],
+    "reporter":{"type":"HCP","country":"France","report_date":"2025-02-15"},
+    "expectedness":"unlisted","reporter_causality":"not reported"
+  },
+  {
+    "case_id": "C07",
+    "unsolicited": true,
+    "patient": {"age": 7, "sex": "male"},
+    "suspect_drugs": [{
+      "name": "salbutamol","dose":"as labeled","route":"inhalation",
+      "frequency":"PRN","indication":"asthma","start_date":"2025-08-01"
+    }],
+    "events": [{
+      "pt":"Drug ineffective","onset_date":"2025-08-03",
+      "severity":"mild","outcome":"recovered",
+      "serious": false,"serious_criteria":[]
+    }],
+    "confounders":["poor inhaler technique (suspected)"],
+    "reporter":{"type":"HCP","country":"Canada","report_date":"2025-08-04"},
+    "expectedness":"listed","reporter_causality":"not reported"
+  },
+  {
+    "case_id": "C08",
+    "unsolicited": true,
+    "patient": {"age": 63, "sex": "female"},
+    "suspect_drugs": [{
+      "name":"metformin","dose":"500 mg prescribed","route":"oral",
+      "frequency":"BID","indication":"type 2 diabetes","start_date":"2025-07-01","stop_date":"2025-07-15"
+    }],
+    "events": [{
+      "pt":"Lactic acidosis","onset_date":"2025-07-15",
+      "severity":"severe","outcome":"recovered","outcome_date":"2025-07-18",
+      "serious": true,"serious_criteria":["life-threatening"]
+    }],
+    "error":"patient took 1000 mg BID from 2025-07-10",
+    "labs":[{"name":"Lactate","value":7.0,"unit":"mmol/L","date":"2025-07-15"},{"name":"pH","value":7.25,"unit":"","date":"2025-07-15"}],
+    "reporter":{"type":"HCP","country":"United States","report_date":"2025-07-19"},
+    "expectedness":"unlisted","reporter_causality":"not reported"
+  },
+  {
+    "case_id": "C09",
+    "unsolicited": true,
+    "patient": {"age": 28, "sex": "female"},
+    "suspect_drugs": [{
+      "name":"tretinoin (topical OTC)","dose":"intermittent","route":"topical",
+      "frequency":"intermittent","indication":"cosmetic","start_date":"2025-01-15","stop_date":"2025-05-10"
+    }],
+    "pregnancy":{"lmp":"2025-03-01","gestational_weeks":10},
+    "events": [{
+      "pt":"Drug exposure during pregnancy","onset_date":"2025-05-10",
+      "severity":"mild","outcome":"unknown",
+      "serious": false,"serious_criteria":[]
+    }],
+    "reporter":{"type":"Consumer","country":"Australia","report_date":"2025-05-11"},
+    "expectedness":"unlisted/contraindicated","reporter_causality":"not reported"
+  },
+  {
+    "case_id": "C10",
+    "unsolicited": true,
+    "patient": {"age": 52, "sex": "male"},
+    "suspect_drugs": [{
+      "name":"isoniazid","dose":"300 mg","route":"oral",
+      "frequency":"once daily","indication":"latent TB","start_date":"2025-01-05","stop_date":"2025-02-10"
+    }],
+    "events": [{
+      "pt":"Hepatitis","onset_date":"2025-02-07",
+      "severity":"severe","outcome":"recovering",
+      "serious": true,"serious_criteria":["hospitalization"]
+    }],
+    "labs":[{"name":"ALT","value":620,"unit":"U/L","date":"2025-02-08"},{"name":"AST","value":540,"unit":"U/L","date":"2025-02-08"},{"name":"Bilirubin","value":3.2,"unit":"mg/dL","date":"2025-02-08"}],
+    "history":["social alcohol"],
+    "reporter":{"type":"HCP","country":"—","report_date":"2025-02-12"},
+    "expectedness":"unlisted","reporter_causality":"not reported"
+  }
+];
+const STORAGE_KEY = "pv-narrative-practice-v1";
+const REQUIRED_ELEMENTS = [
+  { id: "patient", label: "Patient age / sex", check: s => (s.patient.age || s.patient.age_unknown) && (s.patient.sex || s.patient.sex_unknown) },
+  { id: "indication", label: "Indication", check: s => s.suspect_drugs.some(d => d.indication) },
+  { id: "drug_dose", label: "Drug dose / route / frequency", check: s => s.suspect_drugs.some(d => d.dose && d.route && d.frequency) },
+  { id: "drug_dates", label: "Drug start / stop dates", check: s => s.suspect_drugs.some(d => d.start_date) },
+  { id: "event_pt", label: "Event PT and onset", check: s => s.event.pt && s.event.onset_date },
+  { id: "actions", label: "Actions taken with dates", check: s => s.event.action_taken && (s.event.action_date || hasDate(s.event.action_taken)) },
+  { id: "outcome", label: "Outcome with date", check: s => s.event.outcome && (s.event.outcome_date || s.event.outcome === "unknown") },
+  { id: "dechallenge", label: "Dechallenge status", check: s => s.dechallenge.status },
+  { id: "rechallenge", label: "Rechallenge status", check: s => s.rechallenge.status },
+  { id: "history", label: "History / concomitants", check: s => s.history.length || s.concomitants.length },
+  { id: "investigations", label: "Investigations with value / unit / date", check: s => !s.labs.length || s.labs.every(l => l.name && l.value !== "" && (l.unit || l.unit === "") && l.date) },
+  { id: "seriousness", label: "Seriousness and criteria", check: s => !s.event.seriousness || s.event.serious_criteria.length > 0 },
+  { id: "reporter", label: "Reporter type / country / date", check: s => s.reporter.type && s.reporter.country && s.reporter.report_date },
+  { id: "expectedness", label: "Expectedness", check: s => s.expectedness },
+  { id: "causality", label: "Reporter causality", check: s => s.reporter_causality }
+];
+const ABBREVIATIONS = [
+  { short: "HCP", long: "health care professional" },
+  { short: "AE", long: "adverse event" },
+  { short: "SAE", long: "serious adverse event" },
+  { short: "CK", long: "creatine kinase" },
+  { short: "ALT", long: "alanine aminotransferase" },
+  { short: "AST", long: "aspartate aminotransferase" },
+  { short: "INR", long: "international normalized ratio" },
+  { short: "PT", long: "preferred term" }
+];
+const state = {
+  selectedCaseId: CASES[0].case_id,
+  cases: {},
+  showModelNarrative: false,
+  report: null
+};
+const hud = {};
+
+document.addEventListener("DOMContentLoaded", () => {
+  cacheHudElements();
+  initState();
+  initCasePicker();
+  initFormListeners();
+  initNarrativeListeners();
+  renderCase(state.selectedCaseId);
+  updateCompletionSummary();
+  document.getElementById("submitBtn").addEventListener("click", handleSubmit);
+});
+
+function cacheHudElements() {
+  hud.caseLabel = document.getElementById("activeCaseLabel");
+  hud.completion = document.getElementById("completionBadge");
+  hud.word = document.getElementById("wordStatus");
+  hud.wordMeterFill = document.getElementById("wordMeterFill");
+  hud.wordMeter = document.getElementById("wordMeter");
+}
+
+function updateCompletionSummary() {
+  const cs = getActiveCaseState();
+  if (!cs) return;
+  const completed = REQUIRED_ELEMENTS.filter(item => item.check(cs)).length;
+  const total = REQUIRED_ELEMENTS.length;
+  if (hud.completion) {
+    hud.completion.textContent = `${completed}/${total} data elements`;
+    let stateFlag = "start";
+    if (completed >= total) {
+      stateFlag = "complete";
+    } else if (completed > 0) {
+      stateFlag = "progress";
+    }
+    hud.completion.dataset.state = stateFlag;
+  }
+  if (hud.caseLabel) {
+    const index = CASES.findIndex(c => c.case_id === state.selectedCaseId);
+    const labelIndex = index >= 0 ? index + 1 : "-";
+    hud.caseLabel.textContent = `Case ${labelIndex} | ${state.selectedCaseId}`;
+  }
+  const narrative = cs.narrative || "";
+  const words = narrative.trim() ? narrative.trim().split(/\s+/).length : 0;
+  if (hud.word) {
+    if (!words) {
+      hud.word.textContent = "Word target pending";
+      hud.word.dataset.state = "idle";
+    } else {
+      hud.word.textContent = `${words} words`;
+      hud.word.dataset.state = words >= 120 && words <= 180 ? "ok" : words < 120 ? "low" : "high";
+    }
+  }
+  if (hud.wordMeterFill) {
+    const meterState = !words ? "idle" : words >= 120 && words <= 180 ? "ok" : words < 120 ? "low" : "high";
+    hud.wordMeterFill.dataset.state = meterState;
+    const capped = Math.max(0, Math.min(words, 180));
+    hud.wordMeterFill.style.width = `${Math.min(100, (capped / 180) * 100)}%`;
+  }
+  if (hud.wordMeter) {
+    hud.wordMeter.setAttribute("aria-valuenow", String(Math.min(words, 180)));
+    hud.wordMeter.setAttribute("aria-valuetext", `${words} words`);
+  }
+}
+
+function initState() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      if (parsed && parsed.cases) {
+        state.cases = parsed.cases;
+        state.selectedCaseId = parsed.selectedCaseId || state.selectedCaseId;
+        state.showModelNarrative = parsed.showModelNarrative || false;
+      }
+    } catch (err) {
+      console.warn("Unable to parse saved state", err);
+    }
+  }
+  CASES.forEach(cs => {
+    if (!state.cases[cs.case_id]) {
+      state.cases[cs.case_id] = createDefaultCaseState(cs);
+    } else {
+      const defaults = createDefaultCaseState(cs);
+      state.cases[cs.case_id] = { ...defaults, ...state.cases[cs.case_id] };
+      state.cases[cs.case_id].suspect_drugs = mergeList(defaults.suspect_drugs, state.cases[cs.case_id].suspect_drugs, emptyDrug);
+      state.cases[cs.case_id].labs = mergeList(defaults.labs, state.cases[cs.case_id].labs, emptyLab);
+      state.cases[cs.case_id].history = state.cases[cs.case_id].history || defaults.history;
+      state.cases[cs.case_id].concomitants = state.cases[cs.case_id].concomitants || defaults.concomitants;
+      state.cases[cs.case_id].narrative = state.cases[cs.case_id].narrative || "";
+    }
+  });
+  persistState();
+}
+
+function createDefaultCaseState(caseData) {
+  const event = caseData.events[0] || {};
+  const actionDate = extractDate(caseData.action_taken);
+  return {
+    patient: {
+      age: caseData.patient?.age ?? "",
+      age_unknown: false,
+      sex: caseData.patient?.sex || "",
+      sex_unknown: false
+    },
+    suspect_drugs: (caseData.suspect_drugs || []).map(cloneDrug),
+    event: {
+      pt: event.pt || "",
+      onset_date: event.onset_date || "",
+      severity: event.severity || "",
+      seriousness: !!event.serious,
+      serious_criteria: Array.isArray(event.serious_criteria) ? [...event.serious_criteria] : [],
+      outcome: event.outcome || "",
+      outcome_date: event.outcome_date || "",
+      action_taken: caseData.action_taken ? caseData.action_taken.replace(/\s*\d{4}-.*/, "").trim() || caseData.action_taken : (caseData.dechallenge ? "drug interrupted" : ""),
+      action_date: actionDate || ""
+    },
+    dechallenge: {
+      status: (caseData.dechallenge || "not reported").toLowerCase(),
+      date: caseData.dechallenge_date || ""
+    },
+    rechallenge: {
+      status: (caseData.rechallenge || "not reported").toLowerCase(),
+      date: caseData.rechallenge_date || ""
+    },
+    labs: (caseData.labs || []).map(cloneLab),
+    history: (caseData.history || []).slice(),
+    concomitants: (caseData.concomitants || []).map(formatConcomitant),
+    reporter: {
+      type: caseData.reporter?.type || "",
+      country: caseData.reporter?.country || "",
+      report_date: caseData.reporter?.report_date || ""
+    },
+    expectedness: caseData.expectedness || "",
+    reporter_causality: caseData.reporter_causality || "",
+    narrative: ""
+  };
+}
+
+function cloneDrug(drug) {
+  return {
+    name: drug.name || "",
+    dose: drug.dose || "",
+    route: drug.route || "",
+    frequency: drug.frequency || "",
+    indication: drug.indication || "",
+    start_date: drug.start_date || "",
+    stop_date: drug.stop_date || ""
+  };
+}
+
+function cloneLab(lab) {
+  return {
+    name: lab.name || "",
+    value: lab.value !== undefined ? String(lab.value) : "",
+    unit: lab.unit !== undefined ? lab.unit : "",
+    date: lab.date || ""
+  };
+}
+
+function emptyDrug() {
+  return { name: "", dose: "", route: "", frequency: "", indication: "", start_date: "", stop_date: "" };
+}
+
+function emptyLab() {
+  return { name: "", value: "", unit: "", date: "" };
+}
+
+function mergeList(defaultList, savedList, factory) {
+  const base = Array.isArray(savedList) ? savedList.map(item => ({ ...factory(), ...item })) : defaultList;
+  return base.length ? base : defaultList.length ? defaultList : [factory()];
+}
+
+function formatConcomitant(item) {
+  if (!item) return "";
+  if (typeof item === "string") return item;
+  const parts = [item.name, item.dose, item.frequency].filter(Boolean);
+  return parts.join(" ");
+}
+
+function initCasePicker() {
+  const select = document.getElementById("caseSelect");
+  select.innerHTML = CASES.map((c, idx) => `<option value="${c.case_id}">Case ${idx + 1} | ${c.case_id}</option>`).join("");
+  select.value = state.selectedCaseId;
+  select.addEventListener("change", event => {
+    saveCurrentNarrative();
+    state.selectedCaseId = event.target.value;
+    state.showModelNarrative = false;
+    renderCase(state.selectedCaseId);
+    persistState();
+    updateCompletionSummary();
+  });
+  document.getElementById("randomCaseBtn").addEventListener("click", () => {
+    saveCurrentNarrative();
+    const ids = CASES.map(c => c.case_id);
+    const choices = ids.filter(id => id !== state.selectedCaseId);
+    const next = choices[Math.floor(Math.random() * choices.length)] || state.selectedCaseId;
+    state.selectedCaseId = next;
+    select.value = next;
+    state.showModelNarrative = false;
+    renderCase(next);
+    persistState();
+    updateCompletionSummary();
+  });
+}
+
+function renderCase(caseId) {
+  const caseData = CASES.find(c => c.case_id === caseId);
+  const caseState = state.cases[caseId];
+  renderVignette(caseData);
+  populatePatient(caseState);
+  renderDrugList(caseState);
+  populateEvent(caseState);
+  renderLabList(caseState);
+  renderChips("history", caseState.history);
+  renderChips("concom", caseState.concomitants);
+  populateReporter(caseState);
+  const narrativeInput = document.getElementById("narrativeInput");
+  narrativeInput.value = caseState.narrative || "";
+  updateWordCount();
+  clearReport();
+  state.showModelNarrative = false;
+  updateCompletionSummary();
+}
+
+function renderVignette(caseData) {
+  const container = document.getElementById("vignetteContent");
+  const drugLines = (caseData.suspect_drugs || []).map(d => `
+    <div><strong>${d.name}</strong>: ${d.dose || ""} via ${d.route || ""}, ${d.frequency || ""}${d.indication ? ` for ${d.indication}` : ""}${d.start_date ? `; start ${d.start_date}` : ""}${d.stop_date ? `; stop ${d.stop_date}` : ""}</div>`).join("");
+  const labLines = (caseData.labs || []).map(l => `${l.name}: ${l.value}${l.unit ? ` ${l.unit}` : ""} on ${l.date}${l.uln ? ` (ULN ${l.uln})` : ""}`).join("<br />");
+  const historyLines = [];
+  if (caseData.history?.length) historyLines.push(`History: ${caseData.history.join(", ")}`);
+  if (caseData.concomitants?.length) historyLines.push(`Concomitants: ${caseData.concomitants.map(formatConcomitant).join(", ")}`);
+  if (caseData.confounders?.length) historyLines.push(`Confounders: ${caseData.confounders.join(", ")}`);
+  const extraLines = [];
+  if (caseData.pregnancy) {
+    extraLines.push(`Pregnancy: LMP ${caseData.pregnancy.lmp}, ${caseData.pregnancy.gestational_weeks} weeks at report.`);
+  }
+  if (caseData.treatment) extraLines.push(`Treatment: ${caseData.treatment}.`);
+  if (caseData.procedures?.length) extraLines.push(`Procedures: ${caseData.procedures.join(", ")}.`);
+  if (caseData.error) extraLines.push(`Error: ${caseData.error}.`);
+  container.innerHTML = `
+    <div class="vignette-section">
+      <strong>Patient</strong>
+      Age ${caseData.patient?.age ?? ""}, ${caseData.patient?.sex || ""}${caseData.unsolicited ? ", unsolicited report" : ""}
+    </div>
+    <div class="vignette-section">
+      <strong>Indication / Suspect therapy</strong>
+      ${drugLines}
+    </div>
+    <div class="vignette-section">
+      <strong>Event</strong>
+      ${caseData.events?.map(e => `${e.pt} (onset ${e.onset_date}${e.severity ? `, ${e.severity}` : ""})${e.serious ? `; serious criteria: ${e.serious_criteria.join(", ")}` : ""}${e.outcome ? `; outcome ${e.outcome}${e.outcome_date ? ` ${e.outcome_date}` : ""}` : ""}`).join("<br />")}
+    </div>
+    ${labLines ? `<div class="vignette-section"><strong>Investigations</strong>${labLines}</div>` : ""}
+    ${historyLines.length ? `<div class="vignette-section"><strong>History &amp; Factors</strong>${historyLines.join("<br />")}</div>` : ""}
+    ${extraLines.length ? `<div class="vignette-section"><strong>Additional</strong>${extraLines.join("<br />")}</div>` : ""}
+    <div class="vignette-section">
+      <strong>Reporter</strong>
+      ${caseData.reporter?.type || ""} from ${caseData.reporter?.country || ""} (reported ${caseData.reporter?.report_date || ""}); Expectedness: ${caseData.expectedness || ""}; Reporter causality: ${caseData.reporter_causality || ""}.
+    </div>`;
+}
+
+function populatePatient(caseState) {
+  const ageInput = document.getElementById("patientAge");
+  const ageUnknown = document.getElementById("patientAgeUnknown");
+  const sexSelect = document.getElementById("patientSex");
+  const sexUnknown = document.getElementById("patientSexUnknown");
+  ageInput.value = caseState.patient.age || "";
+  ageUnknown.checked = caseState.patient.age_unknown;
+  ageInput.disabled = caseState.patient.age_unknown;
+  sexSelect.value = caseState.patient.sex || "";
+  sexUnknown.checked = caseState.patient.sex_unknown;
+  sexSelect.disabled = caseState.patient.sex_unknown;
+}
+
+function renderDrugList(caseState) {
+  const list = document.getElementById("drugList");
+  list.innerHTML = "";
+  caseState.suspect_drugs.forEach((drug, idx) => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "dynamic-item";
+    wrapper.innerHTML = `
+      <div class="field-group">
+        <label>Drug Name</label>
+        <input type="text" data-collection="suspect_drugs" data-field="name" data-index="${idx}" value="${escapeHtml(drug.name)}" />
+      </div>
+      <div class="field-inline">
+        <div class="field-group"><label>Dose</label><input type="text" data-collection="suspect_drugs" data-field="dose" data-index="${idx}" value="${escapeHtml(drug.dose)}" /></div>
+        <div class="field-group"><label>Route</label><input type="text" data-collection="suspect_drugs" data-field="route" data-index="${idx}" value="${escapeHtml(drug.route)}" /></div>
+      </div>
+      <div class="field-inline">
+        <div class="field-group"><label>Frequency</label><input type="text" data-collection="suspect_drugs" data-field="frequency" data-index="${idx}" value="${escapeHtml(drug.frequency)}" /></div>
+        <div class="field-group"><label>Indication</label><input type="text" data-collection="suspect_drugs" data-field="indication" data-index="${idx}" value="${escapeHtml(drug.indication)}" /></div>
+      </div>
+      <div class="field-inline">
+        <div class="field-group"><label>Start Date</label><input type="date" data-collection="suspect_drugs" data-field="start_date" data-index="${idx}" value="${drug.start_date || ""}" /></div>
+        <div class="field-group"><label>Stop Date</label><input type="date" data-collection="suspect_drugs" data-field="stop_date" data-index="${idx}" value="${drug.stop_date || ""}" /></div>
+      </div>
+      ${caseState.suspect_drugs.length > 1 ? `<button type="button" class="remove" data-remove="suspect_drugs" data-index="${idx}">Remove</button>` : ""}`;
+    list.appendChild(wrapper);
+  });
+}
+
+function populateEvent(caseState) {
+  document.getElementById("eventPt").value = caseState.event.pt || "";
+  document.getElementById("eventOnset").value = caseState.event.onset_date || "";
+  document.getElementById("eventSeverity").value = caseState.event.severity || "";
+  document.getElementById("eventSerious").checked = !!caseState.event.seriousness;
+  setMultiSelect(document.getElementById("eventSeriousCriteria"), caseState.event.serious_criteria || []);
+  document.getElementById("eventOutcome").value = caseState.event.outcome || "";
+  document.getElementById("eventOutcomeDate").value = caseState.event.outcome_date || "";
+  document.getElementById("actionTaken").value = caseState.event.action_taken || "";
+  document.getElementById("actionDate").value = caseState.event.action_date || "";
+  document.getElementById("dechallengeStatus").value = caseState.dechallenge.status || "";
+  document.getElementById("dechallengeDate").value = caseState.dechallenge.date || "";
+  document.getElementById("rechallengeStatus").value = caseState.rechallenge.status || "";
+  document.getElementById("rechallengeDate").value = caseState.rechallenge.date || "";
+}
+
+function setMultiSelect(select, values) {
+  Array.from(select.options).forEach(opt => {
+    opt.selected = values.includes(opt.value);
+  });
+}
+
+function renderLabList(caseState) {
+  const list = document.getElementById("labList");
+  list.innerHTML = "";
+  if (!caseState.labs.length) {
+    caseState.labs.push(emptyLab());
+  }
+  caseState.labs.forEach((lab, idx) => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "dynamic-item";
+    wrapper.innerHTML = `
+      <div class="field-group"><label>Name</label><input type="text" data-collection="labs" data-field="name" data-index="${idx}" value="${escapeHtml(lab.name)}" /></div>
+      <div class="field-inline">
+        <div class="field-group"><label>Value</label><input type="text" data-collection="labs" data-field="value" data-index="${idx}" value="${escapeHtml(lab.value)}" /></div>
+        <div class="field-group"><label>Unit</label><input type="text" data-collection="labs" data-field="unit" data-index="${idx}" value="${escapeHtml(lab.unit)}" /></div>
+        <div class="field-group"><label>Date</label><input type="date" data-collection="labs" data-field="date" data-index="${idx}" value="${lab.date || ""}" /></div>
+      </div>
+      ${caseState.labs.length > 1 ? `<button type="button" class="remove" data-remove="labs" data-index="${idx}">Remove</button>` : ""}`;
+    list.appendChild(wrapper);
+  });
+}
+
+function renderChips(type, items) {
+  const container = type === "history" ? document.getElementById("historyChips") : document.getElementById("concomChips");
+  container.innerHTML = "";
+  items.filter(Boolean).forEach((item, idx) => {
+    const chip = document.createElement("div");
+    chip.className = "chip";
+    chip.innerHTML = `${escapeHtml(item)} <button type="button" data-chip-remove="${type}" data-index="${idx}" aria-label="Remove">&times;</button>`;
+    container.appendChild(chip);
+  });
+}
+
+function populateReporter(caseState) {
+  document.getElementById("reporterType").value = caseState.reporter.type || "";
+  document.getElementById("reporterCountry").value = caseState.reporter.country || "";
+  document.getElementById("reportDate").value = caseState.reporter.report_date || "";
+  document.getElementById("expectedness").value = caseState.expectedness || "";
+  document.getElementById("reporterCausality").value = caseState.reporter_causality || "";
+}
+
+function initFormListeners() {
+  const form = document.getElementById("caseForm");
+  form.addEventListener("input", handleFormInput, true);
+  form.addEventListener("change", handleFormInput, true);
+  form.addEventListener("click", handleDynamicButtons);
+  document.getElementById("addDrugBtn").addEventListener("click", () => {
+    const cs = getActiveCaseState();
+    cs.suspect_drugs.push(emptyDrug());
+    renderDrugList(cs);
+    persistState();
+    updateCompletionSummary();
+  });
+  document.getElementById("addLabBtn").addEventListener("click", () => {
+    const cs = getActiveCaseState();
+    cs.labs.push(emptyLab());
+    renderLabList(cs);
+    persistState();
+    updateCompletionSummary();
+  });
+  document.getElementById("addHistoryBtn").addEventListener("click", () => addChip("history"));
+  document.getElementById("addConcomBtn").addEventListener("click", () => addChip("concom"));
+}
+
+function handleFormInput(event) {
+  const target = event.target;
+  const cs = getActiveCaseState();
+  if (!cs) return;
+  if (target.dataset.bind) {
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    setNestedValue(cs, target.dataset.bind, value);
+    if (target.id === "patientAgeUnknown") {
+      document.getElementById("patientAge").disabled = value;
+      if (value) cs.patient.age = "";
+      document.getElementById("patientAge").value = cs.patient.age;
+    }
+    if (target.id === "patientSexUnknown") {
+      document.getElementById("patientSex").disabled = value;
+      if (value) cs.patient.sex = "";
+      document.getElementById("patientSex").value = cs.patient.sex;
+    }
+    if (target.id === "eventSerious") {
+      if (!value) cs.event.serious_criteria = [];
+      setMultiSelect(document.getElementById("eventSeriousCriteria"), cs.event.serious_criteria);
+    }
+  } else if (target.dataset.collection) {
+    const index = Number(target.dataset.index);
+    const field = target.dataset.field;
+    const coll = target.dataset.collection;
+    if (!Array.isArray(cs[coll])) cs[coll] = [];
+    const item = cs[coll][index] || {};
+    item[field] = target.value;
+    cs[coll][index] = item;
+  }
+  if (target.id === "eventSeriousCriteria") {
+    const selected = Array.from(target.selectedOptions).map(opt => opt.value);
+    cs.event.serious_criteria = selected;
+  }
+  persistState();
+  updateCompletionSummary();
+}
+
+function handleDynamicButtons(event) {
+  const btn = event.target.closest("button");
+  if (!btn) return;
+  if (btn.dataset.remove) {
+    const coll = btn.dataset.remove;
+    const index = Number(btn.dataset.index);
+    const cs = getActiveCaseState();
+    cs[coll].splice(index, 1);
+    if (!cs[coll].length) cs[coll].push(coll === "labs" ? emptyLab() : emptyDrug());
+    if (coll === "labs") {
+      renderLabList(cs);
+    } else if (coll === "suspect_drugs") {
+      renderDrugList(cs);
+    }
+    persistState();
+    updateCompletionSummary();
+  }
+  if (btn.dataset.chipRemove) {
+    const type = btn.dataset.chipRemove;
+    const index = Number(btn.dataset.index);
+    const cs = getActiveCaseState();
+    const key = type === "history" ? "history" : "concomitants";
+    cs[key].splice(index, 1);
+    renderChips(type, cs[key]);
+    persistState();
+    updateCompletionSummary();
+  }
+}
+
+function addChip(type) {
+  const input = type === "history" ? document.getElementById("historyInput") : document.getElementById("concomInput");
+  const value = input.value.trim();
+  if (!value) return;
+  const cs = getActiveCaseState();
+  const key = type === "history" ? "history" : "concomitants";
+  cs[key].push(value);
+  input.value = "";
+  renderChips(type, cs[key]);
+  persistState();
+  updateCompletionSummary();
+}
+
+function initNarrativeListeners() {
+  const textarea = document.getElementById("narrativeInput");
+  textarea.addEventListener("input", () => {
+    const cs = getActiveCaseState();
+    if (!cs) return;
+    cs.narrative = textarea.value;
+    updateWordCount();
+    persistState();
+  });
+}
+
+function updateWordCount() {
+  const textarea = document.getElementById("narrativeInput");
+  const words = textarea.value.trim() ? textarea.value.trim().split(/\s+/).length : 0;
+  const counter = document.getElementById("wordCount");
+  counter.textContent = `${words} words (target 120-180)`;
+  counter.classList.remove("warning", "error");
+  if (words && (words < 120 || words > 180)) {
+    counter.classList.add("warning");
+  }
+  if (words && words < 80) {
+    counter.classList.add("error");
+  }
+  updateCompletionSummary();
+}
+
+function handleSubmit() {
+  saveCurrentNarrative();
+  const caseData = CASES.find(c => c.case_id === state.selectedCaseId);
+  const caseState = JSON.parse(JSON.stringify(getActiveCaseState()));
+  const narrative = caseState.narrative || "";
+  const report = runValidation(caseData, caseState, narrative);
+  state.report = report;
+  renderReport(report, caseData, caseState, narrative);
+  persistState();
+  document.getElementById("reportSection").scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function runValidation(caseData, caseState, narrative) {
+  const issues = { mustFix: [], shouldImprove: [], style: [] };
+  const checklist = REQUIRED_ELEMENTS.map(item => {
+    const ok = item.check(caseState);
+    if (!ok) {
+      issues.mustFix.push(item.label + " missing");
+    }
+    return { id: item.id, label: item.label, status: ok ? "ok" : "warn" };
+  });
+  const words = narrative.trim() ? narrative.trim().split(/\s+/).length : 0;
+  if (words < 120 || words > 180) {
+    issues.shouldImprove.push(`Narrative word count ${words} is outside the 120-180 range.`);
+  }
+  const dateWarnings = validateDates(caseState);
+  issues.mustFix.push(...dateWarnings.mustFix);
+  issues.shouldImprove.push(...dateWarnings.shouldImprove);
+  const phiFlags = detectPHI(narrative);
+  issues.mustFix.push(...phiFlags.mustFix);
+  issues.style.push(...phiFlags.style);
+  const causalFlags = detectCausalLanguage(narrative);
+  issues.style.push(...causalFlags);
+  const abbrevFlags = checkAbbreviations(narrative);
+  issues.shouldImprove.push(...abbrevFlags);
+  const labFlags = verifyLabNarrative(caseState.labs, narrative);
+  issues.shouldImprove.push(...labFlags);
+  const drFlags = ensureDechallengeMention(caseState, narrative);
+  issues.mustFix.push(...drFlags.mustFix);
+  issues.shouldImprove.push(...drFlags.shouldImprove);
+  const toneFlags = ensureNeutralTone(narrative);
+  issues.style.push(...toneFlags);
+  const consistencyFlags = compareWithGroundTruth(caseData, caseState);
+  issues.mustFix.push(...consistencyFlags.mustFix);
+  issues.shouldImprove.push(...consistencyFlags.shouldImprove);
+  const scoreDetails = scoreNarrative(caseData, caseState, narrative, issues);
+  const totalScore = scoreDetails.reduce((sum, item) => sum + item.score, 0);
+  const timeline = buildTimeline(caseData, caseState);
+  return { checklist, issues, scoreDetails, totalScore, wordCount: words, timeline };
+}
+
+function validateDates(caseState) {
+  const res = { mustFix: [], shouldImprove: [] };
+  const onset = parseDate(caseState.event.onset_date);
+  const outcome = parseDate(caseState.event.outcome_date);
+  const action = parseDate(caseState.event.action_date);
+  const drugStart = parseDate(caseState.suspect_drugs[0]?.start_date);
+  const stop = parseDate(caseState.suspect_drugs[0]?.stop_date);
+  if (drugStart && onset && onset < drugStart) {
+    res.mustFix.push("Event onset precedes drug start date.");
+  }
+  if (onset && outcome && outcome < onset) {
+    res.mustFix.push("Outcome date precedes onset date.");
+  }
+  if (stop && onset && stop < onset) {
+    res.shouldImprove.push("Stop date occurs before onset; confirm chronology.");
+  }
+  if (caseState.event.outcome && ["recovered", "recovering"].includes(caseState.event.outcome) && !caseState.event.action_taken && !caseState.suspect_drugs.some(d => d.stop_date)) {
+    res.shouldImprove.push("Recovered outcome documented without action taken or stop date.");
+  }
+  if (action && drugStart && action < drugStart) {
+    res.shouldImprove.push("Action taken recorded before drug initiation.");
+  }
+  return res;
+}
+
+function detectPHI(text) {
+  const res = { mustFix: [], style: [] };
+  const emailPattern = /[\w.-]+@[\w.-]+\.[A-Za-z]{2,}/g;
+  const phonePattern = /(\+?\d{1,3}[\s-]?)?(\(\d{3}\)|\d{3})[\s-]?\d{3}[\s-]?\d{4}/g;
+  const namePattern = /\b(Mr\.|Ms\.|Mrs\.|Dr\.)\s+[A-Z][a-z]+/g;
+  if (emailPattern.test(text)) res.mustFix.push("Narrative appears to contain an email address; remove PHI.");
+  if (phonePattern.test(text)) res.mustFix.push("Narrative appears to contain a phone number; remove PHI.");
+  if (namePattern.test(text)) res.style.push("Avoid personal identifiers such as titles with surnames.");
+  return res;
+}
+
+function detectCausalLanguage(text) {
+  const matches = [];
+  const simple = /(caused by|due to|resulted from|led to|because of)/gi;
+  let match;
+  while ((match = simple.exec(text)) !== null) {
+    const snippet = text.slice(Math.max(0, match.index - 40), match.index + 40);
+    if (!/according to the reporter/i.test(snippet)) {
+      matches.push(`Causal phrasing "${match[0]}" should be attributed or softened.`);
+    }
+  }
+  return matches;
+}
+
+function checkAbbreviations(text) {
+  const warnings = [];
+  ABBREVIATIONS.forEach(abbrev => {
+    const regex = new RegExp(`\\b${abbrev.short}\\b`, "i");
+    if (regex.test(text) && !new RegExp(`${abbrev.long}[^.]*\(${abbrev.short}\)`, "i").test(text)) {
+      warnings.push(`Expand ${abbrev.short} on first use (e.g., "${capitalize(abbrev.long)} (${abbrev.short})").`);
+    }
+  });
+  return warnings;
+}
+
+function ensureDechallengeMention(caseState, text) {
+  const res = { mustFix: [], shouldImprove: [] };
+  const lower = text.toLowerCase();
+  if (!lower.includes("dechallenge")) {
+    res.mustFix.push("Narrative must describe the dechallenge status.");
+  }
+  if (!lower.includes("rechallenge")) {
+    res.shouldImprove.push("Narrative should state the rechallenge status." );
+  }
+  return res;
+}
+
+function ensureNeutralTone(text) {
+  const flags = [];
+  if (/i\b|we\b|our\b/i.test(text)) {
+    flags.push("Maintain third-person neutral tone (avoid first-person references)." );
+  }
+  if (/!+/g.test(text)) {
+    flags.push("Avoid emphatic punctuation in regulatory narratives." );
+  }
+  return flags;
+}
+
+function verifyLabNarrative(labs, narrative) {
+  if (!labs || !labs.length) return [];
+  const lower = narrative.toLowerCase();
+  const issues = [];
+  labs.filter(l => l.name && l.value !== "").forEach(lab => {
+    const name = lab.name.toLowerCase();
+    if (lower.includes(name)) {
+      const value = String(lab.value);
+      const unit = lab.unit || "";
+      const date = lab.date || "";
+      if (!narrative.includes(value) || (unit && !narrative.includes(unit)) || (date && !narrative.includes(date))) {
+        issues.push(`Include ${lab.name} value ${value}${unit ? " " + unit : ""} with date ${date}.`);
+      }
+    }
+  });
+  return issues;
+}
+
+function compareWithGroundTruth(caseData, caseState) {
+  const res = { mustFix: [], shouldImprove: [] };
+  const gd = caseData.suspect_drugs?.[0];
+  const sd = caseState.suspect_drugs?.[0];
+  if (gd && sd) {
+    ["name", "dose", "route", "frequency", "indication"].forEach(field => {
+      if (gd[field] && sd[field] && normalize(gd[field]) !== normalize(sd[field])) {
+        res.shouldImprove.push(`Suspect drug ${field} differs from source (${gd[field]}).`);
+      }
+    });
+    if (gd.start_date && sd.start_date && gd.start_date !== sd.start_date) {
+      res.mustFix.push(`Drug start date should match source (${gd.start_date}).`);
+    }
+    if (gd.stop_date && sd.stop_date && gd.stop_date !== sd.stop_date) {
+      res.shouldImprove.push(`Drug stop date should match source (${gd.stop_date}).`);
+    }
+  }
+  const ge = caseData.events?.[0];
+  if (ge) {
+    if (ge.onset_date !== caseState.event.onset_date) {
+      res.mustFix.push(`Event onset should be ${ge.onset_date}.`);
+    }
+    if ((ge.outcome_date || "") !== (caseState.event.outcome_date || "")) {
+      res.shouldImprove.push(`Outcome date should reflect ${ge.outcome_date || "source data"}.`);
+    }
+  }
+  if ((caseData.dechallenge || "not reported").toLowerCase() !== (caseState.dechallenge.status || "").toLowerCase()) {
+    res.shouldImprove.push(`Dechallenge should reflect ${caseData.dechallenge || "not reported"}.`);
+  }
+  if ((caseData.rechallenge || "not reported").toLowerCase() !== (caseState.rechallenge.status || "").toLowerCase()) {
+    res.shouldImprove.push(`Rechallenge should reflect ${caseData.rechallenge || "not reported"}.`);
+  }
+  if (caseData.reporter?.type && caseData.reporter.type !== caseState.reporter.type) {
+    res.mustFix.push(`Reporter type is ${caseData.reporter.type}.`);
+  }
+  if (caseData.reporter?.country && normalize(caseData.reporter.country) !== normalize(caseState.reporter.country)) {
+    res.shouldImprove.push(`Reporter country should match ${caseData.reporter.country}.`);
+  }
+  if (caseData.reporter?.report_date && caseData.reporter.report_date !== caseState.reporter.report_date) {
+    res.shouldImprove.push(`Reporter date should be ${caseData.reporter.report_date}.`);
+  }
+  if (caseData.expectedness && caseData.expectedness !== caseState.expectedness) {
+    res.mustFix.push(`Expectedness should be ${caseData.expectedness}.`);
+  }
+  if (caseData.reporter_causality && caseData.reporter_causality !== caseState.reporter_causality) {
+    res.mustFix.push(`Reporter causality should be ${caseData.reporter_causality}.`);
+  }
+  return res;
+}
+
+function scoreNarrative(caseData, caseState, narrative, issues) {
+  const breakdown = [];
+  breakdown.push({ id: 1, label: "Completeness", score: scoreCompleteness(caseState) });
+  breakdown.push({ id: 2, label: "Chronology", score: scoreChronology(caseState, narrative) });
+  breakdown.push({ id: 3, label: "Drug Details", score: scoreDrugDetails(caseState) });
+  breakdown.push({ id: 4, label: "Event Course", score: scoreEvent(caseState, narrative) });
+  breakdown.push({ id: 5, label: "De/Rechallenge", score: scoreDechallenge(caseState, narrative) });
+  breakdown.push({ id: 6, label: "Confounders", score: scoreConfounders(caseData, caseState, narrative) });
+  breakdown.push({ id: 7, label: "Investigations", score: scoreInvestigations(caseData, caseState, narrative) });
+  breakdown.push({ id: 8, label: "Seriousness / Expectedness", score: scoreSeriousness(caseData, caseState, narrative) });
+  breakdown.push({ id: 9, label: "Tone & Style", score: scoreTone(narrative, issues) });
+  breakdown.push({ id: 10, label: "Consistency", score: scoreConsistency(caseData, caseState, issues) });
+  return breakdown;
+}
+
+function scoreCompleteness(caseState) {
+  const hits = REQUIRED_ELEMENTS.filter(item => item.check(caseState)).length;
+  if (hits >= REQUIRED_ELEMENTS.length) return 2;
+  if (hits >= REQUIRED_ELEMENTS.length - 2) return 1;
+  return 0;
+}
+
+function scoreChronology(caseState, narrative) {
+  const tokens = [caseState.suspect_drugs[0]?.start_date, caseState.event.onset_date, caseState.event.outcome_date].filter(Boolean);
+  const described = tokens.filter(date => narrative.includes(date)).length;
+  if (described >= 2) return 2;
+  if (described >= 1) return 1;
+  return 0;
+}
+
+function scoreDrugDetails(caseState) {
+  const drug = caseState.suspect_drugs[0];
+  if (!drug) return 0;
+  const essentials = [drug.dose, drug.route, drug.frequency].filter(Boolean).length;
+  if (essentials === 3 && drug.start_date) return 2;
+  if (essentials >= 2) return 1;
+  return 0;
+}
+
+function scoreEvent(caseState, narrative) {
+  const hasSeverity = caseState.event.severity;
+  const mentions = caseState.event.outcome && narrative.includes(caseState.event.outcome);
+  if (hasSeverity && mentions && caseState.event.action_taken) return 2;
+  if ((hasSeverity && caseState.event.action_taken) || mentions) return 1;
+  return 0;
+}
+
+function scoreDechallenge(caseState, narrative) {
+  const lower = narrative.toLowerCase();
+  if (caseState.dechallenge.status && lower.includes("dechallenge")) {
+    if (caseState.rechallenge.status && lower.includes("rechallenge")) return 2;
+    return 1;
+  }
+  return 0;
+}
+
+function scoreConfounders(caseData, caseState, narrative) {
+  const baseItems = [...(caseData.history || []), ...(caseData.concomitants || []).map(formatConcomitant), ...(caseData.confounders || [])];
+  if (!baseItems.length) return 2;
+  const lower = narrative.toLowerCase();
+  const hits = baseItems.filter(item => item && lower.includes(item.toLowerCase())).length;
+  if (hits >= Math.min(2, baseItems.length)) return 2;
+  if (hits > 0) return 1;
+  return 0;
+}
+
+function scoreInvestigations(caseData, caseState, narrative) {
+  const labs = caseData.labs || [];
+  if (!labs.length) return 2;
+  const lower = narrative.toLowerCase();
+  const hits = labs.filter(l => lower.includes(l.name.toLowerCase()) && narrative.includes(String(l.value)) && (!l.unit || narrative.includes(l.unit))).length;
+  if (hits === labs.length) return 2;
+  if (hits > 0) return 1;
+  return 0;
+}
+
+function scoreSeriousness(caseData, caseState, narrative) {
+  const serious = caseData.events?.[0]?.serious;
+  if (!serious) {
+    const mentions = /non-serious|not serious/i.test(narrative);
+    return mentions ? 2 : 1;
+  }
+  const criteria = caseData.events?.[0]?.serious_criteria || [];
+  const lower = narrative.toLowerCase();
+  const mentions = criteria.every(c => lower.includes(c.toLowerCase()));
+  const expectedness = caseState.expectedness && narrative.toLowerCase().includes(caseState.expectedness.toLowerCase());
+  if (mentions && expectedness) return 2;
+  if (mentions || expectedness) return 1;
+  return 0;
+}
+
+function scoreTone(narrative, issues) {
+  const anyStyle = issues.style.length;
+  if (anyStyle) return 1;
+  if (/\b(appears|was|were)\b/i.test(narrative)) return 2;
+  return 1;
+}
+
+function scoreConsistency(caseData, caseState, issues) {
+  const mustFixCount = issues.mustFix.filter(msg => !msg.includes("Narrative")) .length;
+  if (!mustFixCount) return 2;
+  if (mustFixCount <= 2) return 1;
+  return 0;
+}
+
+function buildTimeline(caseData, caseState) {
+  const drug = caseState.suspect_drugs[0] || {};
+  const events = [
+    { key: "start", label: "Drug Start", date: drug.start_date },
+    { key: "onset", label: "Event Onset", date: caseState.event.onset_date },
+    { key: "action", label: "Action", date: caseState.event.action_date || firstDateFromString(caseState.event.action_taken) },
+    { key: "outcome", label: "Outcome", date: caseState.event.outcome_date }
+  ];
+  const warnings = [];
+  const parsed = events.map(ev => ({ ...ev, timestamp: parseDate(ev.date) }));
+  for (let i = 1; i < parsed.length; i++) {
+    if (parsed[i].timestamp && parsed[i - 1].timestamp && parsed[i].timestamp < parsed[i - 1].timestamp) {
+      warnings.push(`${parsed[i].label} precedes ${parsed[i - 1].label}.`);
+      parsed[i].invalid = true;
+    }
+  }
+  return { events: parsed, warnings };
+}
+
+function renderReport(report, caseData, caseState, narrative) {
+  const section = document.getElementById("reportSection");
+  section.classList.remove("hidden");
+  const badgeClass = report.totalScore >= 16 ? "score-green" : report.totalScore >= 12 ? "score-amber" : "score-red";
+  const modelNarrative = generateModelNarrative(caseData);
+  const diffHtml = highlightDiff(modelNarrative, narrative);
+  section.innerHTML = `
+    <div class="report-summary">
+      <div class="score-badge ${badgeClass}">${report.totalScore}/20</div>
+      <div>
+        <div><strong>Word count:</strong> ${report.wordCount}</div>
+        <div><strong>Findings:</strong> ${report.issues.mustFix.length} must-fix, ${report.issues.shouldImprove.length} should-improve, ${report.issues.style.length} style tips.</div>
+      </div>
+    </div>
+    <div class="checklist">
+      ${report.checklist.map(item => `<div class="check-item ${item.status}"><span class="icon">${item.status === "ok" ? "✅" : "⚠️"}</span><div>${item.label}</div></div>`).join("")}
+    </div>
+    <div class="timeline">
+      <h3>Timeline Check</h3>
+      <div class="timeline-list">
+        ${report.timeline.events.map(ev => `<div class="timeline-point ${ev.invalid ? "invalid" : ""}"><div><strong>${ev.label}</strong></div><div>${ev.date || "Not captured"}</div></div>`).join("")}
+      </div>
+      ${report.timeline.warnings.length ? `<div class="issue-list" style="margin-top:8px; color:var(--danger);">${report.timeline.warnings.map(w => `<div>⚠️ ${w}</div>`).join("")}</div>` : ""}
+    </div>
+    <div class="issue-section">
+      <h3>Must-fix</h3>
+      <ul class="issue-list">${report.issues.mustFix.length ? report.issues.mustFix.map(item => `<li>${item}</li>`).join("") : "<li>None detected.</li>"}</ul>
+    </div>
+    <div class="issue-section">
+      <h3>Should Improve</h3>
+      <ul class="issue-list">${report.issues.shouldImprove.length ? report.issues.shouldImprove.map(item => `<li>${item}</li>`).join("") : "<li>None.</li>"}</ul>
+    </div>
+    <div class="issue-section">
+      <h3>Style Tips</h3>
+      <ul class="issue-list">${report.issues.style.length ? report.issues.style.map(item => `<li>${item}</li>`).join("") : "<li>Looks good.</li>"}</ul>
+    </div>
+    <div class="toggle-row">
+      <input type="checkbox" id="toggleModel" ${state.showModelNarrative ? "checked" : ""} />
+      <label for="toggleModel">Show Model Narrative</label>
+    </div>
+    <div id="modelWrapper" class="${state.showModelNarrative ? "" : "hidden"}">
+      <div class="model-narrative"><strong>Reference Narrative:</strong><br />${escapeHtml(modelNarrative)}</div>
+      <div class="diff-output"><strong>Coverage Highlight:</strong><br />${diffHtml}</div>
+    </div>
+    <div class="report-actions">
+      <button type="button" class="secondary" id="editResubmitBtn">Edit &amp; Resubmit</button>
+      <button type="button" id="tryAnotherBtn">Try Another Case</button>
+    </div>
+  `;
+  document.getElementById("toggleModel").addEventListener("change", event => {
+    state.showModelNarrative = event.target.checked;
+    document.getElementById("modelWrapper").classList.toggle("hidden", !state.showModelNarrative);
+    persistState();
+  });
+  document.getElementById("editResubmitBtn").addEventListener("click", () => {
+    document.getElementById("narrativeInput").focus();
+  });
+  document.getElementById("tryAnotherBtn").addEventListener("click", () => {
+    document.getElementById("randomCaseBtn").click();
+  });
+}
+
+function clearReport() {
+  const section = document.getElementById("reportSection");
+  section.classList.add("hidden");
+  section.innerHTML = "";
+}
+
+function saveCurrentNarrative() {
+  const cs = getActiveCaseState();
+  if (!cs) return;
+  cs.narrative = document.getElementById("narrativeInput").value;
+  persistState();
+  updateCompletionSummary();
+}
+
+function getActiveCaseState() {
+  return state.cases[state.selectedCaseId];
+}
+
+function persistState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    selectedCaseId: state.selectedCaseId,
+    cases: state.cases,
+    showModelNarrative: state.showModelNarrative
+  }));
+}
+
+function setNestedValue(obj, path, value) {
+  const keys = path.split(".");
+  let ref = obj;
+  for (let i = 0; i < keys.length - 1; i++) {
+    const key = keys[i];
+    if (!(key in ref)) ref[key] = {};
+    ref = ref[key];
+  }
+  ref[keys[keys.length - 1]] = value;
+}
+
+function hasDate(text) {
+  if (!text) return false;
+  return /\d{4}-\d{2}-\d{2}/.test(text);
+}
+
+function parseDate(value) {
+  if (!value) return null;
+  const parsed = new Date(value);
+  return isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function firstDateFromString(text) {
+  if (!text) return "";
+  const match = text.match(/\d{4}-\d{2}-\d{2}/);
+  return match ? match[0] : "";
+}
+
+function extractDate(text) {
+  if (!text) return "";
+  const match = text.match(/\d{4}-\d{2}-\d{2}/);
+  return match ? match[0] : "";
+}
+
+function normalize(value) {
+  return (value || "").toLowerCase().trim();
+}
+
+function capitalize(text) {
+  return text.replace(/(^|\s)([a-z])/g, (_, p1, p2) => p1 + p2.toUpperCase());
+}
+
+function escapeHtml(str) {
+  if (str === undefined || str === null) return "";
+  return String(str).replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+}
+
+function generateModelNarrative(caseData) {
+  const patient = caseData.patient || {};
+  const event = caseData.events?.[0] || {};
+  const drug = caseData.suspect_drugs?.[0] || {};
+  const history = caseData.history || [];
+  const concom = (caseData.concomitants || []).map(formatConcomitant);
+  const labs = caseData.labs || [];
+  const segments = [];
+  segments.push(`A ${patient.age}-year-old ${patient.sex} receiving ${drug.name} ${drug.dose ? `(${drug.dose})` : ""} ${drug.route ? `via ${drug.route}` : ""}${drug.frequency ? ` ${drug.frequency}` : ""}${drug.indication ? ` for ${drug.indication}` : ""} started on ${drug.start_date}${drug.stop_date ? ` and stopped on ${drug.stop_date}` : ""} was reported to experience ${event.pt} on ${event.onset_date}.`);
+  segments.push(`${event.severity ? capitalize(event.severity) + " severity" : ""} ${event.pt.toLowerCase()} ${event.serious ? `met seriousness criteria for ${event.serious_criteria.join(" and ")}` : "was considered non-serious"}.`);
+  if (caseData.action_taken || caseData.dechallenge || drug.stop_date) {
+    const action = caseData.action_taken ? `Action taken was ${caseData.action_taken}.` : "";
+    const stop = drug.stop_date ? `${drug.name} was discontinued on ${drug.stop_date}.` : "";
+    segments.push(`${action} ${stop}`.trim());
+  }
+  if (caseData.dechallenge) {
+    segments.push(`Dechallenge was ${caseData.dechallenge}${caseData.dechallenge_date ? ` on ${caseData.dechallenge_date}` : ""}.`);
+  } else {
+    segments.push(`Dechallenge was not reported.`);
+  }
+  if (caseData.rechallenge) {
+    segments.push(`Rechallenge was ${caseData.rechallenge}${caseData.rechallenge_date ? ` on ${caseData.rechallenge_date}` : ""}.`);
+  } else {
+    segments.push(`Rechallenge was not reported.`);
+  }
+  if (event.outcome) {
+    segments.push(`The outcome was ${event.outcome}${event.outcome_date ? ` as of ${event.outcome_date}` : ""}.`);
+  }
+  if (history.length || concom.length || caseData.confounders) {
+    const extras = [];
+    if (history.length) extras.push(`history of ${history.join(", ")}`);
+    if (concom.length) extras.push(`concomitant therapy including ${concom.join(", ")}`);
+    if (caseData.confounders?.length) extras.push(`additional factors such as ${caseData.confounders.join(", ")}`);
+    segments.push(`Relevant background included ${extras.join(" and ")}.`);
+  }
+  if (labs.length) {
+    const labText = labs.map(l => `${l.name} ${l.value}${l.unit ? ` ${l.unit}` : ""} on ${l.date}`).join("; ");
+    segments.push(`Key investigations reported were ${labText}.`);
+  }
+  if (caseData.procedures?.length) {
+    segments.push(`Procedures included ${caseData.procedures.join(", ")}.`);
+  }
+  if (caseData.treatment) {
+    segments.push(`Acute management comprised ${caseData.treatment}.`);
+  }
+  segments.push(`${caseData.reporter?.type || "Reporter"} from ${caseData.reporter?.country || "unknown country"} reported on ${caseData.reporter?.report_date || "unknown date"}. Expectedness was ${caseData.expectedness} and reporter causality was ${caseData.reporter_causality}.`);
+  segments.push(`Narrative authored in a neutral manner without asserting causality beyond reporter statements.`);
+  return segments.filter(Boolean).join(" ");
+}
+
+function highlightDiff(model, narrative) {
+  const userWords = new Set((narrative || "").toLowerCase().split(/\s+/).filter(Boolean));
+  return model.split(/(\s+)/).map(token => {
+    if (/\s+/.test(token)) return token;
+    const clean = token.replace(/[^\w-]/g, "");
+    if (!clean) return token;
+    if (userWords.has(clean.toLowerCase())) return token;
+    return `<span class="diff-missing">${token}</span>`;
+  }).join("");
+}
+</script>
+</body>
+</html>
