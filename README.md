@@ -22,7 +22,7 @@ An interactive, single-page web application for practicing pharmacovigilance (PV
 
 ## Live Demo
 
-- **GitHub Pages:** `<your live URL here>`
+- **GitHub Pages:** https://soumyadubey.github.io/pv-narrative-practice/
 
 ## Usage
 
